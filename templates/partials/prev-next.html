@@ -1,0 +1,25 @@
+{# 上下篇导航。依赖 page.html 里 set_global 的 `sec`（文章所属 section）。 #}
+{%- if sec -%}
+  {%- set _idx = -1 -%}
+  {%- for x in sec.pages -%}
+    {%- if x.permalink == page.permalink -%}{%- set _idx = loop.index0 -%}{%- endif -%}
+  {%- endfor -%}
+  {%- set _newer = sec.pages[_idx - 1] | default(value=false) -%}
+  {%- set _older = sec.pages[_idx + 1] | default(value=false) -%}
+  {%- if _newer or _older %}
+    <nav class="prev-next" aria-label="上下篇">
+      {% if _newer %}
+        <a class="prev-next__item" href="{{ _newer.permalink }}">
+          <span class="prev-next__label">← {{ config.extra.newer | default(value="上一篇") }}</span>
+          <span class="prev-next__title">{{ _newer.title }}</span>
+        </a>
+      {% else %}<span class="prev-next__item"></span>{% endif %}
+      {% if _older %}
+        <a class="prev-next__item prev-next__item--end" href="{{ _older.permalink }}">
+          <span class="prev-next__label">{{ config.extra.older | default(value="下一篇") }} →</span>
+          <span class="prev-next__title">{{ _older.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+  {%- endif -%}
+{%- endif -%}

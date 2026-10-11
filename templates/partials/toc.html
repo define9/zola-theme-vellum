@@ -1,0 +1,20 @@
+{# 目录：Zola 0.23 的 page.toc 是数组（无 .html），这里渲染前两级。 #}
+{%- if page.toc | default(value=[]) | length > 0 %}
+  <nav class="toc" aria-label="{{ config.extra.toc_title | default(value='目录') }}">
+    <p class="toc__title">{{ config.extra.toc_title | default(value="目录") }}</p>
+    <ul class="toc__list">
+      {%- for item in page.toc -%}
+        <li class="toc__item">
+          <a href="#{{ item.id }}">{{ item.title }}</a>
+          {%- if item.children | default(value=[]) | length > 0 %}
+            <ul class="toc__sub">
+              {%- for sub in item.children -%}
+                <li class="toc__item toc__item--sub"><a href="#{{ sub.id }}">{{ sub.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{% endif %}

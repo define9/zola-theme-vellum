@@ -1,0 +1,23 @@
+{# 文章头部的日期 / 时长 / 标签。调用方需保证页面有 date。 #}
+{%- set_global tx = page.taxonomies | default(value={}) -%}
+<p class="post-meta">
+  {%- if page.date %}
+    <time datetime="{{ page.date | date(format="%Y-%m-%d") }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+    {%- if page.updated %}
+      <span class="sep" aria-hidden="true">·</span>
+      <span>更新于 {{ page.updated | date(format="%Y-%m-%d") }}</span>
+    {%- endif %}
+    <span class="sep" aria-hidden="true">·</span>
+    <span>{{ page.reading_time }} {{ config.extra.minutes | default(value="分钟阅读") }}</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span>{{ page.word_count }} 字</span>
+  {%- endif %}
+  {%- if tx.tags | default(value=[]) | length > 0 %}
+    <span class="sep" aria-hidden="true">·</span>
+    <span class="post-meta__tags">
+      {%- for tag in tx.tags -%}
+        <a class="chip" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>
+      {%- endfor -%}
+    </span>
+  {%- endif %}
+</p>

@@ -1,0 +1,24 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ doc_title }}</title>
+<meta name="description" content="{{ doc_desc }}" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)" />
+
+<link rel="canonical" href="{{ doc_url }}" />
+<link rel="icon" href="{{ get_url(path=config.extra.favicon | default(value='/img/favicon.svg')) }}" />
+{% if config.generate_feeds %}
+  <link rel="alternate" type="application/rss+xml" title="{{ config.title }}" href="{{ get_url(path='rss.xml') }}" />
+{% endif %}
+
+<meta property="og:type" content="{{ doc_type }}" />
+<meta property="og:site_name" content="{{ config.title }}" />
+<meta property="og:title" content="{{ doc_title }}" />
+<meta property="og:description" content="{{ doc_desc }}" />
+<meta property="og:url" content="{{ doc_url }}" />
+<meta property="og:image" content="{{ doc_image }}" />
+<meta name="twitter:card" content="summary_large_image" />
+{% if config.author %}<meta name="author" content="{{ config.author }}" />{% endif %}
+
+{% block head %}{% endblock head %}

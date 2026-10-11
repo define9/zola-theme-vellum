@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ config.title }}</title>
+    <link>{{ config.base_url }}/</link>
+    <description>{{ config.description }}</description>
+    <generator>Zola</generator>
+    <language>{{ config.default_language }}</language>
+    {%- if last_updated %}<lastBuildDate>{{ last_updated | date(format="%a, %d %b %Y %H:%M:%S %z") }}</lastBuildDate>{% endif %}
+    {%- if config.author %}<copyright>{{ config.author }}</copyright>{% endif %}
+    <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
+    {%- for p in pages %}
+      {%- if p.date %}
+      <item>
+        <title>{{ p.title }}</title>
+        <link>{{ p.permalink }}</link>
+        <guid isPermaLink="true">{{ p.permalink }}</guid>
+        <pubDate>{{ p.date | date(format="%a, %d %b %Y %H:%M:%S %z") }}</pubDate>
+        {%- if p.summary %}<description>{{ p.summary | striptags | truncate(length=300) }}</description>{%- endif %}
+        {%- set_global _tx = p.taxonomies | default(value={}) -%}
+        {%- for tag in _tx.tags | default(value=[]) %}
+        <category>{{ tag }}</category>
+        {%- endfor %}
+      </item>
+      {%- endif %}
+    {%- endfor %}
+  </channel>
+</rss>

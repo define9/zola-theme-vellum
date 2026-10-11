@@ -1,0 +1,25 @@
+name = "Vellum"
+description = "大图卡片 + 极简留白的 Zola 博客主题。中文界面，内置明暗切换、阅读进度、目录、Pagefind 搜索、友链页、便签流与 giscus 评论。"
+tags = ["blog", "minimal", "cards", "chinese", "responsive"]
+license = "MIT"
+homepage = "https://github.com/define9/zola-theme-vellum"
+min_version = "0.23.0"
+demo = ""
+
+[extra]
+# 界面文案默认值：用户在 zola.toml 的 [extra] 里写同名键即可覆盖。
+tag_label = "标签"
+home_title = "首页"
+minutes = "分钟阅读"
+no_posts = "还没有文章。"
+older = "下一篇"
+newer = "上一篇"
+toc_title = "目录"
+comments_title = "评论"
+friends_title = "友情链接"
+search_title = "搜索"
+search_placeholder = "搜索文章…"
+search_hint = "输入关键词，支持全文检索。"
+search_empty = "输入关键词开始搜索。"
+search_no_index = "未找到搜索索引。构建后运行 pagefind --site public 后再刷新。"
+search_no_result = "没有匹配的结果。"

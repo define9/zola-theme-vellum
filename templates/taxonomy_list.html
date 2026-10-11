@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{# 分类名可在 config.extra.taxonomy 里改（默认 tags） #}
+
+{% block main %}
+  <div class="wrap">
+    {%- set_global tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
+
+    <header class="page-head">
+      <h1 class="page-head__title">{{ config.extra.tag_label | default(value="标签") }}</h1>
+      <p class="page-head__meta">{{ tax.items | length }} 个</p>
+    </header>
+
+    <ul class="tag-cloud">
+      {%- for t in tax.items -%}
+        {%- set count = t.pages | length -%}
+        <li>
+          <a class="tag-cloud__item" href="{{ t.permalink }}">
+            <span class="tag-cloud__name">{{ t.name }}</span>
+            <span class="tag-cloud__count">{{ count }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endblock main %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="page-head__title">{{ config.extra.friends_title | default(value="友情链接") }}</h1>
+      {% if page.description %}<p class="page-head__desc">{{ page.description }}</p>{% endif %}
+    </header>
+
+    {%- set list = page.extra.friends | default(value=[]) -%}
+    {%- if list | length > 0 -%}
+      <ul class="friends">
+        {%- for f in list -%}
+          <li class="friends__item">
+            <a class="friends__link" href="{{ f.url }}" target="_blank" rel="noopener noreferrer">
+              {%- if f.avatar -%}
+                <img class="friends__avatar" src="{{ f.avatar }}" alt="" width="48" height="48" loading="lazy" />
+              {%- endif -%}
+              <span class="friends__body">
+                <span class="friends__name">{{ f.name }}</span>
+                {%- if f.desc %}<span class="friends__desc">{{ f.desc }}</span>{% endif -%}
+              </span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <p class="friends__apply">
+        交换友链请在
+        {%- if config.extra.social and config.extra.social.github %}
+          <a href="{{ config.extra.social.github }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+        {%- else %}
+          站点留言
+        {%- endif %}
+        里找我。
+      </p>
+    {%- else -%}
+      <p class="empty">还没有友链。在本页 frontmatter 里加一段 <code>[[friends]]</code> 即可。</p>
+    {%- endif %}
+  </div>
+{% endblock main %}

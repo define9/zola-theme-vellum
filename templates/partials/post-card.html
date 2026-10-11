@@ -1,0 +1,32 @@
+{#
+  文章卡片。调用方需提供变量 `p`：
+    {% set p = page %}{% include "partials/post-card.html" %}
+  可选变量 `featured`（bool）、`heading`（h2/h3 的标签级别）。
+#}
+{%- set cover = p.extra.cover | default(value="") -%}
+{%- if not cover -%}{%- set cover = "/img/covers/default.svg" -%}{%- endif -%}
+{%- set level = heading | default(value="h2") -%}
+<article class="card{% if featured %} card--featured{% endif %}">
+  <a class="card__media" href="{{ p.permalink }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ cover }}" alt="" width="1200" height="750" loading="lazy" decoding="async" />
+  </a>
+  <div class="card__body">
+    <{{ level }} class="card__title">
+      <a href="{{ p.permalink }}">{{ p.title }}</a>
+    </{{ level }}>
+    {% if p.description %}<p class="card__desc">{{ p.description }}</p>{% endif %}
+    <p class="card__meta">
+      <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%Y-%m-%d") }}</time>
+      <span class="sep" aria-hidden="true">·</span>
+      <span>{{ p.reading_time }} {{ config.extra.minutes | default(value="分钟阅读") }}</span>
+      {%- set tx = p.taxonomies | default(value={}) -%}
+      {% if tx.tags | default(value=[]) | length > 0 %}
+        <span class="card__tags">
+          {%- for tag in tx.tags -%}
+            <a class="chip" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>
+          {%- endfor -%}
+        </span>
+      {% endif %}
+    </p>
+  </div>
+</article>

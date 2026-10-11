@@ -1,0 +1,23 @@
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <p class="site-footer__copy">
+      © {% if config.extra.since %}{{ config.extra.since }}–{% endif %}{{ now | default(value="") | default(value=config.extra.since) }}
+      {%- if config.author %} {{ config.author }}{% endif %}
+      {%- if config.extra.footer_license %} · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">{{ config.extra.footer_license }}</a>{% endif %}
+    </p>
+
+    <nav class="site-footer__links" aria-label="页脚链接">
+      {%- for key, value in config.extra.social %}
+        {%- set url = value | default(value="") -%}
+        {%- if "http" in url %}
+          <a href="{{ url }}" rel="me noopener noreferrer" target="_blank">{{ key }}</a>
+        {%- endif %}
+      {%- endfor %}
+      {%- if config.generate_feeds %}
+        <a href="{{ get_url(path='rss.xml') }}">RSS</a>
+      {%- endif %}
+    </nav>
+
+    {% if config.extra.footer_note %}<p class="site-footer__note">{{ config.extra.footer_note }}</p>{% endif %}
+  </div>
+</footer>

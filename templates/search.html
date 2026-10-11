@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="wrap wrap--narrow">
+    <header class="page-head">
+      <h1 class="page-head__title">{{ page.title | default(value=config.extra.search_title) }}</h1>
+      <p class="page-head__desc">{{ config.extra.search_hint | default(value="输入关键词，支持全文检索。") }}</p>
+    </header>
+
+    <form class="search" role="search" onsubmit="return false;">
+      <input
+        id="search-input"
+        class="search__input"
+        type="search"
+        name="q"
+        placeholder="{{ config.extra.search_placeholder | default(value='搜索文章…') }}"
+        autocomplete="off"
+        autofocus
+      />
+    </form>
+
+    <p id="search-status" class="search__status" role="status"></p>
+    <ul id="search-results" class="search__results"></ul>
+
+    <noscript>
+      <p class="empty">搜索依赖 JavaScript 与 Pagefind 索引，也可以直接看 <a href="{{ get_url(path='/archives/') }}">归档</a>。</p>
+    </noscript>
+  </div>
+{% endblock main %}
+
+{% block scripts %}
+  <script
+    src="{{ get_url(path='js/search.js') }}"
+    data-base="{{ config.base_url }}"
+    data-empty="{{ config.extra.search_empty | default(value='输入关键词开始搜索。') }}"
+    data-no-index="{{ config.extra.search_no_index | default(value='未找到搜索索引。构建后运行 pagefind --site public 后再刷新。') }}"
+    data-no-result="{{ config.extra.search_no_result | default(value='没有匹配的结果。') }}"
+    defer
+  ></script>
+{% endblock scripts %}

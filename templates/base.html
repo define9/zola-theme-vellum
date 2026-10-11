@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="{{ config.default_language }}">
+  {%- set p = page | default(value={}) -%}
+  {%- set ptitle = p.title | default(value="") -%}
+  {%- set_global doc_title = config.title -%}
+  {%- if ptitle and ptitle != config.title and p.relative_path | default(value="index.md") != "index.md" -%}
+    {%- set_global doc_title = ptitle ~ " · " ~ config.title -%}
+  {%- endif -%}
+  {%- set_global doc_desc = p.description | default(value="") -%}
+  {%- if not doc_desc -%}{%- set_global doc_desc = config.description -%}{%- endif -%}
+  {%- set_global doc_url = p.permalink | default(value=config.base_url) -%}
+  {%- set_global doc_type = "website" -%}
+  {%- if p.relative_path | default(value="index.md") != "index.md" -%}{%- set_global doc_type = "article" -%}{%- endif -%}
+  {%- set pextra = p.extra | default(value={}) -%}
+  {%- set_global doc_image = pextra.cover | default(value="") -%}
+  {%- if not doc_image -%}{%- set_global doc_image = config.base_url ~ "/img/covers/default.svg" -%}{%- endif -%}
+  <head>
+    {% include "partials/head.html" %}
+    <link rel="stylesheet" href="{{ get_url(path='main.css') }}" />
+    {# 明暗切换：在样式生效前定好模式，避免闪白 #}
+    <script>
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("vellum-theme");
+        } catch (e) {}
+        var mode = saved === "light" || saved === "dark" ? saved : "auto";
+        document.documentElement.dataset.theme = mode;
+        document.documentElement.style.colorScheme =
+          mode === "auto" ? "light dark" : mode;
+      })();
+    </script>
+  </head>
+  <body class="page-{{ p.kind | default(value='other') }}">
+    <div class="progress" id="reading-progress" aria-hidden="true"><span></span></div>
+    <a class="skip" href="#main">跳到正文</a>
+    {% include "partials/header.html" %}
+    <main id="main" class="main">{% block main %}{% endblock main %}</main>
+    {% include "partials/footer.html" %}
+    <button id="back-to-top" class="to-top" type="button" aria-label="回到顶部" hidden>↑</button>
+    <script src="{{ get_url(path='js/vellum.js') }}" defer></script>
+    {% block scripts %}{% endblock scripts %}
+  </body>
+</html>

@@ -1,0 +1,10 @@
+// Vellum 主题样式入口。Zola 会把 sass/main.scss 编译成 public/main.css。
+// 拆成 partials 是为了方便覆盖：改自己的 sass/main.scss 逐个 @import 即可。
+
+@import "tokens";
+@import "base";
+@import "layout";
+@import "components";
+@import "article";
+@import "markdown";
+@import "responsive";

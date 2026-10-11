@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{#
+  同时负责两种页面：
+    1. 独立页面（content/about.md）
+    2. section 里的文章（content/posts/*.md）—— 有 page.ancestors
+#}
+
+{% block main %}
+  {%- set_global anc = page.ancestors | default(value=[]) -%}
+  {%- set_global is_post = anc | length > 0 -%}
+  {%- if is_post -%}
+    {%- set_global sec_ref = anc | last -%}
+    {%- set_global sec = get_section(path=sec_ref) -%}
+  {%- endif -%}
+
+  <div class="wrap wrap--article">
+    <article class="post">
+      <header class="post__header">
+        {%- if is_post and sec %}
+          <p class="eyebrow"><a href="{{ sec.permalink }}">{{ sec.title }}</a></p>
+        {%- endif %}
+        <h1 class="post__title">{{ page.title }}</h1>
+        {%- if is_post and page.date %}
+          {% include "partials/post-meta.html" %}
+        {%- elif page.description %}
+          <p class="page-head__desc">{{ page.description }}</p>
+        {%- endif %}
+      </header>
+
+      {%- if page.extra.cover %}
+        <figure class="post__cover">
+          <img src="{{ page.extra.cover }}" alt="" width="1200" height="750" decoding="async" />
+        </figure>
+      {%- endif %}
+
+      <div class="post__layout">
+        <div class="post__content markdown">{{ page.content | safe }}</div>
+        <aside class="post__aside">
+          {%- include "partials/toc.html" -%}
+          {%- if page.extra.note %}<p class="aside__note">{{ page.extra.note }}</p>{% endif %}
+        </aside>
+      </div>
+
+      <footer class="post__footer">
+        {%- if is_post -%}
+          {%- include "partials/prev-next.html" -%}
+        {%- endif %}
+        {%- if config.extra.footer_license and is_post %}
+          <p class="license">{{ config.extra.footer_license }}</p>
+        {%- endif %}
+        {%- include "partials/comments.html" -%}
+      </footer>
+    </article>
+  </div>
+{% endblock main %}

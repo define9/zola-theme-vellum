@@ -1,0 +1,133 @@
+// 响应式
+
+@media (max-width: 1080px) {
+  .post__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .post__aside {
+    position: static;
+    order: -1;
+
+    &:has(.toc) {
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+    }
+  }
+
+  .toc__list {
+    columns: 2;
+    column-gap: 24px;
+    border-left: 0;
+  }
+
+  .toc__item a {
+    border-left: 0;
+    padding-left: 0;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 16px;
+  }
+
+  .wrap {
+    padding: 0 18px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card--featured {
+    display: flex;
+
+    .card__media {
+      aspect-ratio: 16 / 10;
+      min-height: 0;
+    }
+
+    .card__body {
+      padding: 18px 20px 20px;
+    }
+
+    .card__title {
+      font-size: 1.25rem;
+    }
+  }
+
+  .site-header__inner {
+    min-height: 56px;
+    gap: 10px;
+  }
+
+  .brand__name {
+    font-size: 1rem;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 8px;
+  }
+
+  .site-header__inner {
+    flex-wrap: wrap;
+    padding-top: 8px;
+  }
+
+  .theme-toggle {
+    margin-left: auto;
+  }
+
+  .hero {
+    padding: 44px 0 28px;
+  }
+
+  .post__header {
+    padding: 36px 0 16px;
+  }
+
+  .prev-next {
+    grid-template-columns: 1fr;
+  }
+
+  .prev-next__item--end {
+    text-align: left;
+  }
+
+  .notes__item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .archive-year__title {
+    position: static;
+  }
+
+  .toc__list {
+    columns: 1;
+  }
+
+  .site-footer__links {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 460px) {
+  .card__desc {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .to-top {
+    right: 14px;
+    bottom: 14px;
+  }
+}

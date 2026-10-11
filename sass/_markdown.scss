@@ -1,0 +1,239 @@
+// 正文 Markdown 样式（Zola 输出的 HTML）
+
+.markdown {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--ink);
+    margin: 2.2rem 0 0.8rem;
+    scroll-margin-top: 90px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.22rem;
+  }
+
+  h4 {
+    font-size: 1.08rem;
+  }
+
+  p {
+    margin: 0 0 1.15rem;
+  }
+
+  ul,
+  ol {
+    margin: 0 0 1.15rem;
+    padding-left: 1.4rem;
+  }
+
+  li {
+    margin: 0.3rem 0;
+  }
+
+  li > ul,
+  li > ol {
+    margin: 0.3rem 0;
+  }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 0.2rem 0 0.2rem 1.1rem;
+    border-left: 3px solid var(--accent);
+    color: var(--muted);
+    font-style: italic;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: var(--accent);
+  }
+
+  strong {
+    color: var(--ink);
+  }
+
+  img {
+    display: block;
+    margin: 1.6rem 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  figure {
+    margin: 1.6rem 0;
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+  }
+
+  hr {
+    margin: 2.4rem 0;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 5px;
+  }
+
+  table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+    display: block;
+    overflow-x: auto;
+
+    th,
+    td {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface-2);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+      background: color-mix(in srgb, var(--surface-2) 50%, transparent);
+    }
+  }
+
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border: 1px solid var(--border-strong);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--surface-2);
+  }
+}
+
+// 代码块：JS 会给 <pre> 包一层 .code，用于加语言标签与复制按钮
+pre {
+  position: relative;
+  // Zola(Giallo) 给 <pre> 写了内联 color-scheme / background-color，
+  // 这里覆盖掉，让代码块跟随主题的明暗，而不是系统的。
+  color-scheme: var(--code-scheme) !important;
+  background: var(--code-bg) !important;
+  margin: 1.6rem 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--code-bg);
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.7;
+
+  code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+}
+
+// 权重高于上面的 `.markdown code`，否则行内代码底色会跟着每一行重复
+.markdown pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.code {
+  position: relative;
+  margin: 1.6rem 0;
+
+  pre {
+    margin: 0;
+  }
+
+  &.has-label pre {
+    padding-top: 2.6rem;
+  }
+}
+
+.code__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2; // Giallo 给 <pre> 加了内联 background-color，必须显式抬层级
+
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.7rem 0 0.9rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.code__copy {
+  border: 0;
+  background: none;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+// Zola 0.23 (Giallo) 的行号/高亮行基础样式
+.giallo-l {
+  display: inline-block;
+  min-height: 1lh;
+  width: 100%;
+}
+
+.giallo-ln {
+  display: inline-block;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.6em;
+  text-align: right;
+  opacity: 0.55;
+}

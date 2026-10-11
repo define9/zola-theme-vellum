@@ -1,0 +1,4 @@
+# Zola 构建产物（含 pagefind 索引）
+public/
+
+.DS_Store

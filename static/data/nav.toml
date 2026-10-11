@@ -1,0 +1,31 @@
+# 顶部导航。改这个文件就能增删导航项，不用动模板。
+# 删掉某一节 = 隐藏对应链接；path 填站点内的页面路径。
+# 想让导航标题跟随页面 frontmatter 的 title，把 title 留空即可（theme 会自动找页面）。
+
+[[nav]]
+title = "首页"
+path = "/"
+
+[[nav]]
+title = "文章"
+path = "/posts/"
+
+[[nav]]
+title = "归档"
+path = "/archives/"
+
+[[nav]]
+title = "便签"
+path = "/notes/"
+
+[[nav]]
+title = "友链"
+path = "/links/"
+
+[[nav]]
+title = "搜索"
+path = "/search/"
+
+[[nav]]
+title = "关于"
+path = "/about/"

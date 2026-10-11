@@ -1,0 +1,27 @@
+{#
+  giscus 评论。开启条件：config.extra.giscus 填齐 repo / repo_id / category / category_id，
+  且文章没有写 `comments = false`。
+#}
+{%- set g = config.extra.giscus | default(value={}) -%}
+{%- set enabled = page.extra.comments | default(value=true) -%}
+{%- if enabled and g.repo and g.repo_id and g.category_id %}
+  <section class="comments" id="comments">
+    <h2 class="comments__title">{{ config.extra.comments_title | default(value="评论") }}</h2>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="{{ g.repo }}"
+      data-repo-id="{{ g.repo_id }}"
+      data-category="{{ g.category | default(value='General') }}"
+      data-category-id="{{ g.category_id }}"
+      data-mapping="{{ g.mapping | default(value='pathname') }}"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="{{ config.default_language }}"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </section>
+{% endif %}

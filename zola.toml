@@ -1,0 +1,62 @@
+# Vellum 主题自带的演示站点配置。
+# 用户接入自己的站点时，把用得到的几项复制到自己的 zola.toml 即可。
+
+base_url = "https://example.com"
+title = "define9 notes"
+description = "折腾服务器、CI、魔改工具，随手记点技术笔记。"
+default_language = "zh-CN"
+author = "define9"
+
+# 主题用 Sass（sass/main.scss -> public/main.css）
+compile_sass = true
+
+# 正文里常出现 ${{ ... }}（CI 配置）这类 Tera 语法，建议全站关掉正文模板化
+skip_content_templating = ["**/*.md"]
+
+generate_feeds = true
+feed_filenames = ["rss.xml"]
+generate_sitemap = true
+generate_robots_txt = true
+
+taxonomies = [{ name = "tags", render = true, feed = false }]
+
+# 中文标签直接用中文做 URL，不转拼音
+[slugify]
+taxonomies = "off"
+
+[markdown]
+[markdown.highlighting]
+light_theme = "github-light"
+dark_theme = "github-dark"
+add_color_scheme = true
+
+[link_checker]
+external_level = "warn"
+
+[extra]
+# 首页卡片取这个 section（必须真实存在）。设成空字符串则首页只留 hero。
+default_section = "posts"
+# 首页最多展示几篇
+home_posts = 12
+# 分类名（默认 tags）
+# taxonomy = "tags"
+# 首页文案
+home_title = "首页"
+footer_license = "CC BY-NC-SA 4.0"
+# since = 2020
+# footer_note = "本站由 Vellum 驱动"
+# avatar = "/img/avatar.svg"
+# favicon = "/img/favicon.svg"
+
+# 页脚社交链接，只有 http(s) 开头的才会渲染
+[extra.social]
+github = "https://github.com/define9"
+rss = "/rss.xml"
+
+# giscus 评论：repo / repo_id / category / category_id 填齐即开启
+[extra.giscus]
+repo = ""
+repo_id = ""
+category = "General"
+category_id = ""
+mapping = "pathname"

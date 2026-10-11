@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="wrap wrap--narrow">
+    <header class="page-head">
+      <h1 class="page-head__title">{{ section.title }}</h1>
+      {% if section.description %}<p class="page-head__desc">{{ section.description }}</p>{% endif %}
+    </header>
+
+    <ul class="notes">
+      {%- for p in section.pages -%}
+        <li class="notes__item">
+          <a class="notes__date" href="{{ p.permalink }}">
+            <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%Y-%m-%d") }}</time>
+          </a>
+          <div class="notes__body">
+            <p class="notes__title"><a href="{{ p.permalink }}">{{ p.title }}</a></p>
+            <div class="notes__content markdown">{{ p.content | safe }}</div>
+          </div>
+        </li>
+      {%- else -%}
+        <li class="empty">还没有便签。</li>
+      {%- endfor %}
+    </ul>
+  </div>
+{% endblock main %}

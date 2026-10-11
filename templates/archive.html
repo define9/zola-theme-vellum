@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{#
+  归档页。默认取 `posts` section，可用 config.extra.archive_section 改名；
+  若你的站点没有 section，把 archive_section 设为空字符串即可跳过。
+#}
+
+{% block main %}
+  <div class="wrap wrap--narrow">
+    <header class="page-head">
+      <h1 class="page-head__title">{{ page.title }}</h1>
+      {% if page.description %}<p class="page-head__desc">{{ page.description }}</p>{% endif %}
+    </header>
+
+    {%- set sec_path = config.extra.archive_section | default(value=config.extra.default_section) | default(value="posts") -%}
+    {%- if sec_path -%}
+      {%- set_global sec = get_section(path=sec_path ~ "/_index.md") -%}
+      {# reverse 让 group_by 从新到旧分组 #}
+      {%- for year, items in (sec.pages | reverse | group_by(attribute="year")) %}
+        <section class="archive-year">
+          <h2 class="archive-year__title">{{ year }}</h2>
+          <ul class="archive">
+            {%- for p in items -%}
+              <li class="archive__item">
+                <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%m-%d") }}</time>
+                <a href="{{ p.permalink }}">{{ p.title }}</a>
+                {%- set_global _tx = p.taxonomies | default(value={}) -%}
+                {%- if _tx.tags | default(value=[]) | length > 0 %}
+                  <span class="archive__tags">
+                    {%- for tag in _tx.tags -%}<a class="chip chip--sm" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>{%- endfor -%}
+                  </span>
+                {%- endif %}
+              </li>
+            {%- endfor %}
+          </ul>
+        </section>
+      {%- endfor -%}
+    {%- else -%}
+      <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
+    {%- endif %}
+  </div>
+{% endblock main %}

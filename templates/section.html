@@ -1,0 +1,27 @@
+{#
+  section 列表页。给 section 的 _index.md 加：
+    template = "list.html"
+    paginate_by = 5
+#}
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="page-head__title">{{ section.title }}</h1>
+      {% if section.description %}<p class="page-head__desc">{{ section.description }}</p>{% endif %}
+      <p class="page-head__meta">{{ section.pages | length }} 篇</p>
+    </header>
+
+    <div class="cards">
+      {%- for p in paginator.pages -%}
+        {%- set p = p -%}
+        {%- set featured = paginator.current_page == 1 and loop.first -%}
+        {%- set heading = featured and "h2" or "h3" -%}
+        {%- include "partials/post-card.html" -%}
+      {%- else -%}
+        <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
+      {%- endfor %}
+    </div>
+  </div>
+{% endblock main %}
