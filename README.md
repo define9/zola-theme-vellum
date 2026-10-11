@@ -8,6 +8,16 @@
 - 演示站：仓库根目录的 `zola.toml` + `content/`（`zola serve` 直接跑起来就是本站预览）
 - 依赖：Zola **0.23+**（用到了 `paginator`、`get_taxonomy()`、frontmatter `[extra]` 等 0.23 API）
 
+## 预览
+
+首页：左栏 + 头条大卡 + 文章流。
+
+![首页](screenshot.png)
+
+文章列表：section 列表页，头条放大卡，其余小卡。
+
+![文章列表](preview/posts.png)
+
 ## 安装
 
 ```bash
@@ -122,7 +132,7 @@ description = "列表页摘要"
 date = 2026-01-08
 
 [extra]
-cover = "/img/covers/demo.svg"   # 封面；缺省用 /img/covers/default.svg
+cover = "/img/covers/demo.svg"   # 封面；缺省不渲染图片区域
 featured = true                   # 预留字段，首页头条取最新一篇
 comments = false                  # 关掉这篇的评论
 note = "侧栏补充说明"              # 渲染在目录下方
@@ -176,6 +186,7 @@ templates/partials/   sidebar / header / footer / post-card / post-meta / toc / 
                       prev-next / comments / icon
 sass/                 main.scss + 分片（改配色看 _tokens.scss）
 static/               js / img / data/nav.toml
+preview/              README 用的预览图
 content/              演示内容
 src/ + package.json   可选的 Tailwind v4 构建（默认不用）
 theme.toml            主题元信息与默认配置

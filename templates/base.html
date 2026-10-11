@@ -12,8 +12,11 @@
   {%- set_global doc_type = "website" -%}
   {%- if p.relative_path | default(value="index.md") != "index.md" -%}{%- set_global doc_type = "article" -%}{%- endif -%}
   {%- set pextra = p.extra | default(value={}) -%}
-  {%- set_global doc_image = pextra.cover | default(value="") -%}
-  {%- if not doc_image -%}{%- set_global doc_image = config.base_url ~ "/img/covers/default.svg" -%}{%- endif -%}
+  {# og:image 必须是绝对地址；相对路径（含默认值）统一拼 base_url #}
+  {%- set_global doc_image = pextra.cover | default(value="/img/covers/default.svg") -%}
+  {%- if doc_image | split(pat="://") | length < 2 -%}
+    {%- set_global doc_image = config.base_url ~ doc_image -%}
+  {%- endif -%}
   <head>
     {% include "partials/head.html" %}
     <link rel="stylesheet" href="{{ get_url(path='main.css') }}" />
