@@ -7,11 +7,10 @@
 #}
 
 {% block main %}
-  <div class="wrap">
-    <header class="page-head">
-      <h1 class="page-head__title">{{ page.title | default(value=config.extra.friends_title) }}</h1>
-      {% if page.description %}<p class="page-head__desc">{{ page.description }}</p>{% endif %}
-    </header>
+  <header class="list-head">
+    <h1 class="list-head__title">{{ page.title | default(value=config.extra.friends_title) }}</h1>
+    {%- if page.description %}<p class="list-head__meta">{{ page.description }}</p>{% endif %}
+  </header>
 
     {%- set list = page.extra.friends | default(value=page.extra.links) | default(value=[]) -%}
     {%- if list | length > 0 -%}
@@ -46,5 +45,4 @@
     {%- else -%}
       <p class="empty">还没有友链。在本页 frontmatter 里加一段 <code>[[extra.friends]]</code> 即可。</p>
     {%- endif %}
-  </div>
 {% endblock main %}

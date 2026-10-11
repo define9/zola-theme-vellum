@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <div class="wrap">
-    {%- set_global tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
+  {%- set_global tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
     {%- set_global term = false -%}
     {%- for t in tax.items -%}
       {%- if t.path == current_path -%}{%- set_global term = t -%}{%- endif -%}
     {%- endfor -%}
 
-    <header class="page-head">
-      <p class="eyebrow"><a href="{{ tax.permalink }}">{{ config.extra.tag_label | default(value="标签") }}</a></p>
-      <h1 class="page-head__title">{% if term %}#{{ term.name }}{% else %}{{ page.title | default(value=config.extra.tag_label) }}{% endif %}</h1>
-      {% if term %}<p class="page-head__meta">{{ term.pages | length }} 篇</p>{% endif %}
-    </header>
+  <header class="list-head">
+    <p class="post__eyebrow"><a href="{{ tax.permalink }}">{{ config.extra.tag_label | default(value="标签") }}</a></p>
+    <h1 class="list-head__title">{% if term %}#{{ term.name }}{% else %}{{ page.title | default(value=config.extra.tag_label) }}{% endif %}</h1>
+    {%- if term %}<p class="list-head__meta">{{ term.pages | length }} 篇</p>{% endif %}
+  </header>
 
-    <div class="cards">
+  <div class="entries">
       {%- if term -%}
         {%- for p in term.pages -%}
           {%- set p = p -%}
@@ -24,6 +23,5 @@
       {%- else -%}
         <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
       {%- endif -%}
-    </div>
   </div>
 {% endblock main %}

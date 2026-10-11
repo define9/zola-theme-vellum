@@ -1,0 +1,43 @@
+/*
+ * Vellum 的可选 Tailwind v4 入口。
+ * 主题默认样式走 sass/main.scss（Zola 内置 sass 编译，零依赖）。
+ * 只有你想用 utility class 时才需要这份：
+ *
+ *   npm install && npm run css        # 生成 static/tw.css
+ *   # 然后在自己的站点 templates 里 <link rel="stylesheet" href="/tw.css">
+ */
+@import "tailwindcss";
+
+@source "../templates/**/*.html";
+@source "../content/**/*.md";
+@source "../static/js/**/*.js";
+
+/* 把主题的 CSS 变量接进 Tailwind 主题，换肤只改 sass/_tokens.scss 一处 */
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius-card: 10px;
+}
+
+/* 几段常用组合，省得每次都写一长串 */
+@layer components {
+  .tw-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .tw-meta {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+}

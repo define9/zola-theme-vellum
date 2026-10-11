@@ -31,11 +31,18 @@
       })();
     </script>
   </head>
-  <body class="page-{{ p.kind | default(value='other') }}">
+  <body class="kind-{{ p.kind | default(value='other') }}">
     <div class="progress" id="reading-progress" aria-hidden="true"><span></span></div>
     <a class="skip" href="#main">跳到正文</a>
     {% include "partials/header.html" %}
-    <main id="main" class="main">{% block main %}{% endblock main %}</main>
+
+    <div class="shell">
+      <aside class="sidebar" aria-label="侧栏">
+        {% include "partials/sidebar.html" %}
+      </aside>
+      <main id="main" class="content">{% block main %}{% endblock main %}</main>
+    </div>
+
     {% include "partials/footer.html" %}
     <button id="back-to-top" class="to-top" type="button" aria-label="回到顶部" hidden>↑</button>
     <script src="{{ get_url(path='js/vellum.js') }}" defer></script>

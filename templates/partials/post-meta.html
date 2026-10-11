@@ -16,7 +16,7 @@
     <span class="sep" aria-hidden="true">·</span>
     <span class="post-meta__tags">
       {%- for tag in tx.tags -%}
-        <a class="chip" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>
+        <a class="tag" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>
       {%- endfor -%}
     </span>
   {%- endif %}

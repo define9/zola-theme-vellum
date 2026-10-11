@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <div class="wrap wrap--narrow error">
+  <div class="error">
     <p class="error__code">404</p>
     <h1 class="error__title">这页不见了</h1>
     <p class="error__desc">可能是链接过期，或者它从来没存在过。</p>
@@ -10,5 +10,4 @@
       <a href="{{ get_url(path='/archives/') }}">看归档</a>
       <a href="{{ get_url(path='/search/') }}">搜一下</a>
     </p>
-  </div>
 {% endblock main %}

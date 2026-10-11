@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {#
-  同时负责两种页面：
-    1. 独立页面（content/about.md）
-    2. section 里的文章（content/posts/*.md）—— 有 page.ancestors
+  文章与独立页面。
+  左栏由 base 提供；这里只负责「正文 + 右侧目录」这一段。
 #}
 
 {% block main %}
@@ -14,43 +13,40 @@
     {%- set_global sec = get_section(path=sec_ref) -%}
   {%- endif -%}
 
-  <div class="wrap wrap--article">
-    <article class="post">
-      <header class="post__header">
-        {%- if is_post and sec %}
-          <p class="eyebrow"><a href="{{ sec.permalink }}">{{ sec.title }}</a></p>
-        {%- endif %}
-        <h1 class="post__title">{{ page.title }}</h1>
-        {%- if is_post and page.date %}
-          {% include "partials/post-meta.html" %}
-        {%- elif page.description %}
-          <p class="page-head__desc">{{ page.description }}</p>
-        {%- endif %}
-      </header>
-
-      {%- if page.extra.cover %}
-        <figure class="post__cover">
-          <img src="{{ page.extra.cover }}" alt="" width="1200" height="750" decoding="async" />
-        </figure>
+  <article class="post{% if is_post %} post--article{% endif %}">
+    <header class="post__header">
+      {%- if is_post and sec %}
+        <p class="post__eyebrow"><a href="{{ sec.permalink }}">{{ sec.title }}</a></p>
       {%- endif %}
+      <h1 class="post__title">{{ page.title }}</h1>
+      {%- if is_post and page.date %}
+        {% include "partials/post-meta.html" %}
+      {%- elif page.description %}
+        <p class="post__lead">{{ page.description }}</p>
+      {%- endif %}
+    </header>
 
-      <div class="post__layout">
-        <div class="post__content markdown">{{ page.content | safe }}</div>
-        <aside class="post__aside">
-          {%- include "partials/toc.html" -%}
-          {%- if page.extra.note %}<p class="aside__note">{{ page.extra.note }}</p>{% endif %}
-        </aside>
-      </div>
+    {%- if page.extra.cover %}
+      <figure class="post__cover">
+        <img src="{{ page.extra.cover }}" alt="" width="1200" height="750" decoding="async" />
+      </figure>
+    {%- endif %}
 
-      <footer class="post__footer">
-        {%- if is_post -%}
-          {%- include "partials/prev-next.html" -%}
-        {%- endif %}
-        {%- if config.extra.footer_license and is_post %}
-          <p class="license">{{ config.extra.footer_license }}</p>
-        {%- endif %}
-        {%- include "partials/comments.html" -%}
-      </footer>
-    </article>
-  </div>
+    <div class="post__layout">
+      <div class="post__content markdown">{{ page.content | safe }}</div>
+      <aside class="post__aside">
+        {%- include "partials/toc.html" -%}
+      </aside>
+    </div>
+
+    <footer class="post__footer">
+      {%- if is_post -%}
+        {%- include "partials/prev-next.html" -%}
+      {%- endif %}
+      {%- if config.extra.footer_license and is_post %}
+        <p class="license">{{ config.extra.footer_license }}</p>
+      {%- endif %}
+      {%- include "partials/comments.html" -%}
+    </footer>
+  </article>
 {% endblock main %}

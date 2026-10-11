@@ -1,37 +1,30 @@
 {% extends "base.html" %}
 
 {#
-  首页。展示 `config.extra.default_section`（默认 posts）里最新的若干篇，
-  数量由 config.extra.home_posts 控制（默认 12）。把 default_section 设为空字符串则只留 hero。
+  首页：左栏（侧边卡片）在 base 里，右侧是文章流。
+  数量由 config.extra.home_posts 控制（默认 12），取 config.extra.default_section。
 #}
 
 {% block main %}
-  <div class="wrap">
-    <section class="hero">
-      <h1 class="hero__title">{{ config.title }}</h1>
-      {% if config.description %}<p class="hero__desc">{{ config.description }}</p>{% endif %}
-    </section>
-
-    {%- set sec_path = config.extra.default_section | default(value="posts") -%}
-    {%- if sec_path -%}
-      {%- set_global sec = get_section(path=sec_path ~ "/_index.md") -%}
-      {%- set_global limit = config.extra.home_posts | default(value=12) | int -%}
-      {%- if sec.pages | length > 0 %}
-        <div class="cards">
-          {%- for p in sec.pages -%}
-            {%- if loop.index > limit %}{% break %}{% endif -%}
-            {%- set p = p -%}
-            {%- set featured = loop.first -%}
-            {%- set heading = featured and "h2" or "h3" -%}
-            {%- include "partials/post-card.html" -%}
-          {%- endfor %}
-        </div>
-      {%- else -%}
-        <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
-      {%- endif -%}
+  {%- set sec_path = config.extra.default_section | default(value="posts") -%}
+  {%- if sec_path -%}
+    {%- set_global sec = get_section(path=sec_path ~ "/_index.md") -%}
+    {%- set_global limit = config.extra.home_posts | default(value=12) | int -%}
+    {%- if sec.pages | length > 0 %}
+      <div class="entries">
+        {%- for p in sec.pages -%}
+          {%- if loop.index > limit %}{% break %}{% endif -%}
+          {%- set p = p -%}
+          {%- set featured = loop.first -%}
+          {%- set heading = featured and "h2" or "h3" -%}
+          {%- include "partials/post-card.html" -%}
+        {%- endfor %}
+      </div>
       {%- if sec.pages | length > limit %}
-        <p class="more"><a href="{{ sec.permalink }}">查看全部 {{ sec.pages | length }} 篇 →</a></p>
+        <p class="more"><a href="{{ sec.permalink }}">查看全部 {{ sec.pages | length }} 篇</a></p>
       {%- endif %}
-    {%- endif %}
-  </div>
+    {%- else -%}
+      <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
+    {%- endif -%}
+  {%- endif %}
 {% endblock main %}

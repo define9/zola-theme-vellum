@@ -1,0 +1,75 @@
+{# 左侧栏：站点卡 / 菜单卡 / 统计卡 / 社交卡 #}
+
+{%- set sec_path = config.extra.default_section | default(value="posts") -%}
+{%- if sec_path -%}
+  {%- set_global side_sec = get_section(path=sec_path ~ "/_index.md") -%}
+{%- endif -%}
+{%- set_global side_tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
+{%- set_global side_nav = load_data(path="data/nav.toml") | default(value={}) -%}
+
+<section class="panel panel--site">
+  {%- if config.extra.avatar -%}
+    <img class="panel__avatar" src="{{ config.extra.avatar }}" alt="" width="56" height="56" decoding="async" />
+  {%- endif -%}
+  <h2 class="panel__title">{{ config.title }}</h2>
+  {%- if config.description %}<p class="panel__text">{{ config.description }}</p>{% endif -%}
+</section>
+
+{%- if side_nav.nav | default(value=[]) | length > 0 %}
+<nav class="panel panel--menu" aria-label="站内导航">
+  <ul class="menu">
+    {%- for item in side_nav.nav -%}
+      {%- set_global href = get_url(path=item.path) -%}
+      {%- set_global here = get_url(path=current_path | default(value='/')) -%}
+      {%- set_global icon_name = "home" -%}
+      {%- if item.path == "/" -%}
+        {%- set_global icon_name = "home" -%}
+      {%- elif "posts" in item.path -%}
+        {%- set_global icon_name = "posts" -%}
+      {%- elif "archive" in item.path -%}
+        {%- set_global icon_name = "archive" -%}
+      {%- elif "tag" in item.path -%}
+        {%- set_global icon_name = "tags" -%}
+      {%- elif "link" in item.path -%}
+        {%- set_global icon_name = "friends" -%}
+      {%- elif "search" in item.path -%}
+        {%- set_global icon_name = "search" -%}
+      {%- elif "note" in item.path -%}
+        {%- set_global icon_name = "notes" -%}
+      {%- elif "about" in item.path -%}
+        {%- set_global icon_name = "about" -%}
+      {%- endif -%}
+      <li>
+        <a class="menu__link{% if here == href %} is-active{% endif %}" href="{{ href }}">
+          {% include "partials/icon.html" %}
+          <span>{{ item.title | default(value=config.extra.home_title | default(value="首页")) }}</span>
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>
+{%- endif %}
+
+<section class="panel panel--stats">
+  <ul class="stats">
+    <li><b>{{ side_sec.pages | length | default(value=0) }}</b><span>文章</span></li>
+    <li><b>{{ side_tax.items | length | default(value=0) }}</b><span>标签</span></li>
+    {%- if config.extra.since %}<li><b>{{ config.extra.since }}</b><span>建站</span></li>{% endif %}
+  </ul>
+</section>
+
+{%- if config.extra.author_bio or config.extra.social %}
+<section class="panel panel--about">
+  {%- if config.extra.author_bio %}<p class="panel__text">{{ config.extra.author_bio }}</p>{% endif -%}
+  {%- if config.extra.social %}
+    <p class="panel__social">
+      {%- for key, value in config.extra.social -%}
+        {%- set_global url = value | default(value="") -%}
+        {%- if "http" in url -%}
+          <a href="{{ url }}" target="_blank" rel="me noopener noreferrer">{{ key }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </p>
+  {%- endif -%}
+</section>
+{%- endif %}

@@ -1,7 +1,8 @@
 # Vellum
 
-大图卡片 + 极简留白的 Zola 博客主题。界面文案中文，内置明暗切换、阅读进度、目录、
-Pagefind 搜索、友链页、便签流与 giscus 评论。
+左栏 + 文章流的 Zola 博客主题：左边是站点卡 / 菜单 / 统计，右边是文章流；文章页是
+「左栏 + 正文 + 右侧目录」三栏。界面文案中文，内置明暗切换、阅读进度、代码块复制、
+目录滚动高亮、Pagefind 搜索、友链页、便签流与 giscus 评论。
 
 - 主题：`theme.toml`
 - 演示站：仓库根目录的 `zola.toml` + `content/`（`zola serve` 直接跑起来就是本站预览）
@@ -29,9 +30,9 @@ skip_content_templating = ["**/*.md"]
 
 | 页面 | 模板 | 说明 |
 | --- | --- | --- |
-| 首页 | `index.html` | 大图头条卡 + 卡片网格，取 `extra.default_section` 里最新的 N 篇 |
+| 首页 | `index.html` | 头条大卡 + 文章流，取 `extra.default_section` 里最新的 N 篇 |
 | 文章列表 | `section.html` | section 列表页；frontmatter 里加 `paginate_by = N` 启用分页（分页器是 `partials/pager.html`） |
-| 文章 / 页面 | `page.html` | 窄栏正文 + 右侧目录、上下篇、评论 |
+| 文章 / 页面 | `page.html` | 正文 + 右侧目录、上下篇、评论；左栏由 `base.html` 统一提供 |
 | 分类（标签） | `taxonomy_list.html` / `taxonomy_single.html` | 标签云与标签下的文章 |
 | 归档 | `archive.html` | 按年份分组 |
 | 便签 | `notes.html` | 时间线式短内容 |
@@ -40,7 +41,12 @@ skip_content_templating = ["**/*.md"]
 | 404 | `404.html` | — |
 
 其它：明暗切换（记住偏好、默认跟随系统）、阅读进度条、代码块语言标签与一键复制、
-目录滚动高亮、回到顶部、外链自动 `target="_blank"`、RSS / sitemap / robots.txt / SEO meta。
+目录滚动高亮、回到顶部、导航高亮（文章页也会点亮所属栏目）、外链自动 `target="_blank"`、
+RSS / sitemap / robots.txt / SEO meta。
+
+布局：`.shell` 是「左栏 + 内容」两列网格，左栏（`partials/sidebar.html`）依次是站点卡、
+带图标的菜单卡、文章/标签/建站年份统计卡、作者简介与社交链接。窄屏（≤960px）侧栏变成
+横向两栏，再窄（≤720px）只保留站点卡，其余折叠，菜单交给顶栏。
 
 ## 配置
 
@@ -165,11 +171,14 @@ taxonomies = "off"
 ## 目录结构
 
 ```
-templates/        模板与 partials
-sass/             main.scss + 分片（改配色看 _tokens.scss）
-static/           js / img / data/nav.toml
-content/          演示内容
-theme.toml        主题元信息与默认配置
+templates/            模板
+templates/partials/   sidebar / header / footer / post-card / post-meta / toc / pager /
+                      prev-next / comments / icon
+sass/                 main.scss + 分片（改配色看 _tokens.scss）
+static/               js / img / data/nav.toml
+content/              演示内容
+src/ + package.json   可选的 Tailwind v4 构建（默认不用）
+theme.toml            主题元信息与默认配置
 ```
 
 ## 覆盖样式
@@ -183,6 +192,21 @@ $EDITOR sass/_tokens.scss   # 改 --accent / --bg / 圆角等
 ```
 
 只要改颜色的话，也可以不改主题文件，直接在页面底部追加一小段 CSS。
+
+## 可选：Tailwind
+
+主题默认样式是手写的 Sass（Zola 内置 sass 编译，零依赖）。想混用 utility class 时，
+仓库里带了一套 Tailwind v4 配置，但**不装也不影响使用**：
+
+```bash
+npm install
+npm run css          # 生成 static/tw.css
+```
+
+生成后在自己的站点 `templates/base.html` 里加
+`<link rel="stylesheet" href="{{ get_url(path='tw.css') }}" />`。
+`src/input.css` 里的 `@theme` 已经把主题的 CSS 变量接进 Tailwind（`bg-surface`、
+`text-muted`、`font-mono` 等直接可用），换肤仍然只改 `sass/_tokens.scss`。
 
 ## 许可
 

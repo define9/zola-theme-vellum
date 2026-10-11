@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <div class="wrap wrap--narrow">
-    <header class="page-head">
-      <h1 class="page-head__title">{{ section.title }}</h1>
-      {% if section.description %}<p class="page-head__desc">{{ section.description }}</p>{% endif %}
-    </header>
+  <header class="list-head">
+    <h1 class="list-head__title">{{ section.title }}</h1>
+    {%- if section.description %}<p class="list-head__meta">{{ section.description }}</p>{% endif %}
+  </header>
 
     <ul class="notes">
       {%- for p in section.pages -%}
@@ -22,5 +21,4 @@
         <li class="empty">还没有便签。</li>
       {%- endfor %}
     </ul>
-  </div>
 {% endblock main %}

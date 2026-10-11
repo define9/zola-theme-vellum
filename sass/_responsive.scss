@@ -1,17 +1,20 @@
-// 响应式
+// 响应式：左栏在窄屏变成顶部紧凑块
 
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
+  .shell {
+    gap: 28px;
+  }
+
   .post__layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    gap: 28px;
   }
 
   .post__aside {
     position: static;
-    order: -1;
 
     &:has(.toc) {
-      padding: 16px 18px;
+      padding: 14px 16px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--surface);
@@ -20,7 +23,7 @@
 
   .toc__list {
     columns: 2;
-    column-gap: 24px;
+    column-gap: 22px;
     border-left: 0;
   }
 
@@ -31,67 +34,177 @@
   }
 }
 
-@media (max-width: 760px) {
-  body {
-    font-size: 16px;
+@media (max-width: 960px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 22px 20px 56px;
   }
 
-  .wrap {
-    padding: 0 18px;
+  .sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
   }
 
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .card--featured {
+  .panel--site {
+    text-align: left;
     display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
 
-    .card__media {
-      aspect-ratio: 16 / 10;
-      min-height: 0;
-    }
+  .panel--site .panel__avatar {
+    margin-bottom: 0;
+  }
 
-    .card__body {
-      padding: 18px 20px 20px;
-    }
+  .panel__title {
+    font-size: 0.98rem;
+  }
 
-    .card__title {
-      font-size: 1.25rem;
+  .panel--site .panel__text {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+  }
+
+  .panel--menu {
+    padding: 6px;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .menu__link {
+    padding: 6px 10px;
+    font-size: 0.88rem;
+
+    .icon {
+      width: 16px;
+      height: 16px;
     }
   }
 
-  .site-header__inner {
-    min-height: 56px;
-    gap: 10px;
+  .menu__link.is-active::before {
+    display: none;
   }
 
-  .brand__name {
-    font-size: 1rem;
+  .panel--stats,
+  .panel--about {
+    grid-column: span 2;
   }
 
-  .nav {
+  .stats {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    font-size: 15px;
+  }
+
+  .topbar__inner {
+    padding: 0 18px;
+    min-height: 52px;
+    gap: 12px;
+  }
+
+  .topbar__brand {
+    font-size: 0.95rem;
+  }
+
+  .topnav {
     order: 3;
     width: 100%;
     margin-left: 0;
-    padding-bottom: 8px;
+    border-top: 1px solid var(--border);
   }
 
-  .site-header__inner {
+  .topbar__inner {
     flex-wrap: wrap;
-    padding-top: 8px;
+    padding-bottom: 2px;
+  }
+
+  .topnav__link {
+    padding: 12px 10px 10px;
+
+    &.is-active::after {
+      left: 10px;
+      right: 10px;
+    }
   }
 
   .theme-toggle {
     margin-left: auto;
   }
 
-  .hero {
-    padding: 44px 0 28px;
+  .sidebar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
-  .post__header {
-    padding: 36px 0 16px;
+  // 窄屏把统计与关于折叠掉，首屏留给内容
+  // 窄屏：顶栏导航已经够用，侧栏只留站点信息
+  .panel--stats,
+  .panel--about,
+  .panel--menu {
+    display: none;
+  }
+
+  .panel--site {
+    padding: 12px 14px;
+  }
+
+  .menu {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .menu__link {
+    white-space: nowrap;
+  }
+
+  .list-head__title {
+    font-size: 1.3rem;
+  }
+
+  .post__title {
+    font-size: 1.5rem;
+  }
+
+  .entry--lead .entry__title {
+    font-size: 1.3rem;
+  }
+
+  .entry__title {
+    font-size: 1.1rem;
+  }
+
+  .entry__body {
+    padding: 15px 16px 14px;
+  }
+
+  .entry__excerpt {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .entry__media,
+  .entry--lead .entry__media {
+    height: 200px;
+  }
+
+  .entry__more {
+    margin-left: 0;
   }
 
   .prev-next {
@@ -115,15 +228,12 @@
     columns: 1;
   }
 
+  .wrap {
+    padding: 0 18px;
+  }
+
   .site-footer__links {
     margin-left: 0;
-  }
-}
-
-@media (max-width: 460px) {
-  .card__desc {
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
   }
 
   .to-top {

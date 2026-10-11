@@ -3,13 +3,12 @@
 {# 分类名可在 config.extra.taxonomy 里改（默认 tags） #}
 
 {% block main %}
-  <div class="wrap">
-    {%- set_global tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
+  {%- set_global tax = get_taxonomy(kind=config.extra.taxonomy | default(value="tags")) -%}
 
-    <header class="page-head">
-      <h1 class="page-head__title">{{ config.extra.tag_label | default(value="标签") }}</h1>
-      <p class="page-head__meta">{{ tax.items | length }} 个</p>
-    </header>
+  <header class="list-head">
+    <h1 class="list-head__title">{{ config.extra.tag_label | default(value="标签") }}</h1>
+    <p class="list-head__meta">{{ tax.items | length }} 个</p>
+  </header>
 
     <ul class="tag-cloud">
       {%- for t in tax.items -%}
@@ -22,5 +21,4 @@
         </li>
       {%- endfor -%}
     </ul>
-  </div>
 {% endblock main %}

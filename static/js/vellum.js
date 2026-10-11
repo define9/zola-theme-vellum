@@ -243,6 +243,33 @@
     });
   }
 
+  /* ---------- 导航高亮：服务端只能匹配到列表页，这里补上文章页的前缀匹配 ---------- */
+
+  function initNavActive() {
+    var links = document.querySelectorAll(".topnav__link, .menu__link");
+    var norm = function (p) {
+      return p.replace(/\/+$/, "");
+    };
+    var cur = norm(location.pathname);
+    var here = norm(location.pathname);
+
+    links.forEach(function (a) {
+      var href = a.getAttribute("href");
+      if (!href) return;
+      var path = "";
+      try {
+        path = norm(new URL(a.href, location.origin).pathname);
+      } catch (e) {
+        return;
+      }
+      var isHere =
+        path === cur ||
+        (path !== "" && cur.indexOf(path + "/") === 0) ||
+        norm(a.href) === here;
+      a.classList.toggle("is-active", isHere);
+    });
+  }
+
   /* ---------- 图片兜底：外链图挂了就别留破图 ---------- */
 
   function initImageFallback() {
@@ -262,6 +289,7 @@
     initToc();
     initExternalLinks();
     initImageFallback();
+    initNavActive();
   }
 
   if (document.readyState === "loading") {

@@ -1,0 +1,14 @@
+{
+  "name": "zola-theme-vellum",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Vellum 主题的可选 Tailwind v4 构建（主样式仍然是 sass/main.scss，不装也不影响使用）",
+  "scripts": {
+    "css": "tailwindcss -i src/input.css -o static/tw.css --minify",
+    "css:watch": "tailwindcss -i src/input.css -o static/tw.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  }
+}
