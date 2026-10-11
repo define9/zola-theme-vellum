@@ -23,5 +23,8 @@
         <p class="empty">{{ config.extra.no_posts | default(value="还没有文章。") }}</p>
       {%- endfor %}
     </div>
+
+    {# 分页器只在带 paginator 的列表页里有意义 #}
+    {% include "partials/pager.html" %}
   </div>
 {% endblock main %}

@@ -30,7 +30,7 @@ skip_content_templating = ["**/*.md"]
 | 页面 | 模板 | 说明 |
 | --- | --- | --- |
 | 首页 | `index.html` | 大图头条卡 + 卡片网格，取 `extra.default_section` 里最新的 N 篇 |
-| 文章列表 | `section.html` | section 列表页，配 `paginate_by` 自动分页 |
+| 文章列表 | `section.html` | section 列表页；frontmatter 里加 `paginate_by = N` 启用分页（分页器是 `partials/pager.html`） |
 | 文章 / 页面 | `page.html` | 窄栏正文 + 右侧目录、上下篇、评论 |
 | 分类（标签） | `taxonomy_list.html` / `taxonomy_single.html` | 标签云与标签下的文章 |
 | 归档 | `archive.html` | 按年份分组 |

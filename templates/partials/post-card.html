@@ -2,31 +2,40 @@
   文章卡片。调用方需提供变量 `p`：
     {% set p = page %}{% include "partials/post-card.html" %}
   可选变量 `featured`（bool）、`heading`（h2/h3 的标签级别）。
+  没有 cover 时不渲染图片区域，改成纯文字卡片，避免满屏同一张默认图。
 #}
 {%- set cover = p.extra.cover | default(value="") -%}
-{%- if not cover -%}{%- set cover = "/img/covers/default.svg" -%}{%- endif -%}
+{# 没写 description 就截一段正文，卡片不至于只有一行标题 #}
+{%- set desc = p.description | default(value="") -%}
+{%- if not desc and p.content -%}
+  {%- set desc = p.content | striptags | trim | truncate(length=110) -%}
+{%- endif -%}
 {%- set level = heading | default(value="h2") -%}
-<article class="card{% if featured %} card--featured{% endif %}">
-  <a class="card__media" href="{{ p.permalink }}" tabindex="-1" aria-hidden="true">
-    <img src="{{ cover }}" alt="" width="1200" height="750" loading="lazy" decoding="async" />
-  </a>
+{%- set_global _tx = p.taxonomies | default(value={}) -%}
+<article class="card{% if featured %} card--featured{% endif %}{% if not cover %} card--plain{% endif %}">
+  {%- if cover %}
+    <a class="card__media" href="{{ p.permalink }}" tabindex="-1" aria-hidden="true">
+      <img src="{{ cover }}" alt="" width="1200" height="750" loading="lazy" decoding="async" />
+    </a>
+  {%- endif %}
   <div class="card__body">
     <{{ level }} class="card__title">
       <a href="{{ p.permalink }}">{{ p.title }}</a>
     </{{ level }}>
-    {% if p.description %}<p class="card__desc">{{ p.description }}</p>{% endif %}
+    {% if desc %}<p class="card__desc">{{ desc }}</p>{% endif %}
     <p class="card__meta">
-      <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%Y-%m-%d") }}</time>
-      <span class="sep" aria-hidden="true">·</span>
-      <span>{{ p.reading_time }} {{ config.extra.minutes | default(value="分钟阅读") }}</span>
-      {%- set tx = p.taxonomies | default(value={}) -%}
-      {% if tx.tags | default(value=[]) | length > 0 %}
+      {%- if p.date %}
+        <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%Y-%m-%d") }}</time>
+        <span class="sep" aria-hidden="true">·</span>
+        <span>{{ p.reading_time }} {{ config.extra.minutes | default(value="分钟阅读") }}</span>
+      {%- endif %}
+      {%- if _tx.tags | default(value=[]) | length > 0 %}
         <span class="card__tags">
-          {%- for tag in tx.tags -%}
+          {%- for tag in _tx.tags -%}
             <a class="chip" href="{{ get_url(path='/tags/' ~ tag) }}/">{{ tag }}</a>
           {%- endfor -%}
         </span>
-      {% endif %}
+      {%- endif %}
     </p>
   </div>
 </article>

@@ -1,0 +1,19 @@
+{#
+  分页器。Zola 0.23 没有 paginate() 函数了，只能直接用 paginator 对象写。
+  注意：current_index 是 1 起的页码，总页数看 number_pagers（total_pages 不是页数）。
+#}
+{%- if paginator.number_pagers > 1 %}
+  <nav class="pager" aria-label="分页">
+    {%- if paginator.previous %}
+      <a class="pager__link" href="{{ paginator.previous }}">上一页</a>
+    {%- else %}
+      <span class="pager__link is-off">上一页</span>
+    {%- endif %}
+    <span class="pager__info">{{ paginator.current_index }} / {{ paginator.number_pagers }}</span>
+    {%- if paginator.next %}
+      <a class="pager__link" href="{{ paginator.next }}">下一页</a>
+    {%- else %}
+      <span class="pager__link is-off">下一页</span>
+    {%- endif %}
+  </nav>
+{%- endif %}

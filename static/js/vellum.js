@@ -243,12 +243,25 @@
     });
   }
 
+  /* ---------- 图片兜底：外链图挂了就别留破图 ---------- */
+
+  function initImageFallback() {
+    document.querySelectorAll(".card__media img, .friends__avatar").forEach(function (img) {
+      img.addEventListener("error", function () {
+        var media = img.closest(".card__media");
+        if (media) media.remove();
+        else img.remove();
+      });
+    });
+  }
+
   function boot() {
     initTheme();
     initScroll();
     initCode();
     initToc();
     initExternalLinks();
+    initImageFallback();
   }
 
   if (document.readyState === "loading") {

@@ -30,6 +30,32 @@
   }
 }
 
+// 没有封面时的纯文字卡片
+.card--plain .card__body {
+  padding: 24px 22px 22px;
+}
+
+.card--plain .card__title {
+  font-size: 1.12rem;
+}
+
+.card--plain.card--featured {
+  grid-template-columns: minmax(0, 1fr);
+
+  .card__body {
+    padding: 46px 48px;
+  }
+
+  .card__title {
+    font-size: 2rem;
+  }
+
+  .card__desc {
+    font-size: 1.05rem;
+    max-width: 62ch;
+  }
+}
+
 .card__media {
   display: block;
   aspect-ratio: 16 / 10;
@@ -67,7 +93,33 @@
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
 
-  .card__media {
+  // 没有封面时的纯文字卡片
+.card--plain .card__body {
+  padding: 24px 22px 22px;
+}
+
+.card--plain .card__title {
+  font-size: 1.12rem;
+}
+
+.card--plain.card--featured {
+  grid-template-columns: minmax(0, 1fr);
+
+  .card__body {
+    padding: 46px 48px;
+  }
+
+  .card__title {
+    font-size: 2rem;
+  }
+
+  .card__desc {
+    font-size: 1.05rem;
+    max-width: 62ch;
+  }
+}
+
+.card__media {
     aspect-ratio: auto;
     min-height: 260px;
   }
