@@ -185,50 +185,65 @@
     });
   }
 
-  /* ---------- 目录高亮 ---------- */
+  /* ---------- 目录高亮 ----------
+     不再用 IntersectionObserver：窄 band 遇到大段无标题内容时没有任何 heading
+     命中，回退逻辑会让高亮在首项和当前项之间反复跳（表现为卡在第一项 + 闪烁）。
+     改为按滚动位置算：命中线取视口顶部下方固定偏移，最后一个越过命中线的标题即当前项。 */
 
   function initToc() {
     var toc = document.querySelector(".toc");
     var content = document.querySelector(".post__content");
-    if (!toc || !content || !window.IntersectionObserver) return;
+    if (!toc || !content) return;
 
     var links = Array.prototype.slice.call(toc.querySelectorAll("a[href^='#']"));
     if (!links.length) return;
 
-    var byId = {};
-    var targets = [];
+    var items = [];
     links.forEach(function (a) {
       var id = decodeURIComponent(a.getAttribute("href").slice(1));
       var el = document.getElementById(id);
-      if (el) {
-        byId[id] = a;
-        targets.push(el);
+      if (el) items.push({ id: id, link: a, el: el });
+    });
+    if (!items.length) return;
+
+    var current = null;
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+      var line = 120;
+      var active = items[0].id;
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].el.getBoundingClientRect().top - line <= 0) active = items[i].id;
+        else break;
       }
-    });
 
-    var visible = new Set();
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) visible.add(e.target.id);
-          else visible.delete(e.target.id);
-        });
-        var active = null;
-        targets.forEach(function (t) {
-          if (visible.has(t.id)) active = t.id;
-        });
-        if (!active) active = targets[0].id;
-        links.forEach(function (a) {
-          a.parentNode.classList.remove("is-active");
-        });
-        if (byId[active]) byId[active].parentNode.classList.add("is-active");
-      },
-      { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
-    );
+      // 末尾若有大段无标题内容，滚到底强制点亮最后一项
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        active = items[items.length - 1].id;
+      }
 
-    targets.forEach(function (t) {
-      io.observe(t);
-    });
+      if (active === current) return;
+      current = active;
+      items.forEach(function (it) {
+        it.link.parentNode.classList.toggle("is-active", it.id === active);
+      });
+    }
+
+    function schedule() {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+
+    // 图片、代码块等异步撑高后重算一次
+    window.addEventListener("load", schedule);
   }
 
   /* ---------- 外链 ---------- */
