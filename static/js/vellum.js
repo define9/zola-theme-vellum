@@ -186,9 +186,12 @@
   }
 
   /* ---------- 目录高亮 ----------
-     不再用 IntersectionObserver：窄 band 遇到大段无标题内容时没有任何 heading
-     命中，回退逻辑会让高亮在首项和当前项之间反复跳（表现为卡在第一项 + 闪烁）。
-     改为按滚动位置算：命中线取视口顶部下方固定偏移，最后一个越过命中线的标题即当前项。 */
+     不用 IntersectionObserver：窄 band 遇到大段无标题内容时没有 heading 命中，
+     回退逻辑会让高亮在首项和当前项之间反复跳。
+     三个要点：
+       1. heading 位置缓存在文档坐标系里，每帧只做减法，不读 layout；
+       2. 切换阈值加滞回死区，避免亚像素抖动在边界反复翻；
+       3. 点锚点触发平滑滚动时锁定目标，滚动结束才交回。 */
 
   function initToc() {
     var toc = document.querySelector(".toc");
@@ -202,33 +205,63 @@
     links.forEach(function (a) {
       var id = decodeURIComponent(a.getAttribute("href").slice(1));
       var el = document.getElementById(id);
-      if (el) items.push({ id: id, link: a, el: el });
+      if (el) items.push({ id: id, link: a, el: el, top: 0 });
     });
     if (!items.length) return;
 
-    var current = null;
+    var LINE = 120;   // 命中线：视口顶部下方，跟 .post__aside 的 sticky top 配合
+    var HYST = 12;    // 滞回半宽，死区 24px
+    var idx = -1;
     var ticking = false;
+    var lockId = null;
+    var lockTimer = 0;
+
+    // 位置缓存到文档坐标系；不假设 TOC 顺序等于文档顺序，按 top 排一次
+    function measure() {
+      var y = window.scrollY || window.pageYOffset || 0;
+      items.forEach(function (it) {
+        it.top = Math.round(it.el.getBoundingClientRect().top + y);
+      });
+      items.sort(function (a, b) {
+        return a.top - b.top;
+      });
+      idx = -1;   // 排序可能换了位置，交给 update 重新推导
+    }
+
+    var current = null;
+
+    function apply(id) {
+      if (id === null || id === current) return;   // 同 id 不碰 DOM
+      current = id;
+      items.forEach(function (it) {
+        it.link.parentNode.classList.toggle("is-active", it.id === id);
+      });
+    }
 
     function update() {
       ticking = false;
-      var line = 120;
-      var active = items[0].id;
 
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].el.getBoundingClientRect().top - line <= 0) active = items[i].id;
-        else break;
+      if (lockId) {
+        apply(lockId);
+        return;
       }
 
-      // 末尾若有大段无标题内容，滚到底强制点亮最后一项
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-        active = items[items.length - 1].id;
+      var line = (window.scrollY || window.pageYOffset || 0) + LINE;
+
+      // 向下：只有明显越过死区才推进
+      while (idx + 1 < items.length && items[idx + 1].top <= line - HYST) idx++;
+      // 向上：同样要明显离开死区
+      while (idx > 0 && items[idx].top > line + HYST) idx--;
+
+      if (idx < 0) idx = 0;
+
+      // 末尾有大段无标题内容时，滚到底强制点亮最后一项
+      var doc = document.documentElement;
+      if (window.innerHeight + (window.scrollY || 0) >= doc.scrollHeight - 2) {
+        idx = items.length - 1;
       }
 
-      if (active === current) return;
-      current = active;
-      items.forEach(function (it) {
-        it.link.parentNode.classList.toggle("is-active", it.id === active);
-      });
+      apply(items[idx].id);
     }
 
     function schedule() {
@@ -238,12 +271,49 @@
       }
     }
 
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    update();
+    function remeasure() {
+      measure();
+      schedule();
+    }
 
-    // 图片、代码块等异步撑高后重算一次
-    window.addEventListener("load", schedule);
+    // 点目录：锁定目标，避免平滑滚动途中高亮跟着一路跳
+    toc.addEventListener("click", function (e) {
+      var a = e.target.closest ? e.target.closest("a[href^='#']") : null;
+      if (!a) return;
+      var id = decodeURIComponent(a.getAttribute("href").slice(1));
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].id === id) {
+          lockId = id;
+          idx = i;
+          apply(id);
+          window.clearTimeout(lockTimer);
+          lockTimer = window.setTimeout(function () {
+            lockId = null;
+            schedule();
+          }, 900);
+          break;
+        }
+      }
+    });
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
+
+    // 图片解码后高度会变，等一等再量
+    content.querySelectorAll("img").forEach(function (img) {
+      if (img.complete) return;
+      img.addEventListener("load", remeasure, { once: true });
+      img.addEventListener("error", remeasure, { once: true });
+    });
+
+    // 字体换上去后行高变了，位置也得重量
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(remeasure);
+    }
+
+    measure();
+    update();
   }
 
   /* ---------- 外链 ---------- */
